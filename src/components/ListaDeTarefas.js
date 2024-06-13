@@ -82,6 +82,7 @@ function ListaDeTarefas() {
                         type='number'
                         value={novaQtde}
                         onChange={(e) => setNovaQtde(e.target.value)}
+                        placeholder='Digite a quantidade'
                     />
                     <button onClick={adicionarTarefa}>Adicionar</button>
                 </div>
