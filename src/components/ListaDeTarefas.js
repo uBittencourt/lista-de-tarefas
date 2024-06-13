@@ -22,6 +22,7 @@ function ListaDeTarefas() {
 
     const [tarefas, setTarefas] = useState([]);
     const [novaTarefa, setNovaTarefa] = useState('');
+    const [novaQtde, setNovaQtde] = useState('');
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
     useEffect(() => {
@@ -31,7 +32,7 @@ function ListaDeTarefas() {
             const tasksFromAPI = await TaskAPI.readTasks(userId);
             setTarefas(tasksFromAPI);
         } catch (error) {
-            console.error('Erro ao buscar tarefas:', error);
+            console.error('Erro ao buscar produtos:', error);
         }
         };
 
@@ -40,11 +41,12 @@ function ListaDeTarefas() {
 
     const adicionarTarefa = async () => {
         try {
-          const newTaskId = await TaskAPI.createTask({ "descricao": novaTarefa}, userId);
+          const newTaskId = await TaskAPI.createTask({ "descricao": novaTarefa, "quantidade": novaQtde}, userId);
           // Atualize a lista de tarefas após a adição
-          const updatedTasks = [...tarefas, { id: newTaskId, descricao: novaTarefa },userId];
+          const updatedTasks = [...tarefas, { id: newTaskId, descricao: novaTarefa, quantidade: novaQtde },userId];
           setTarefas(updatedTasks);
           setNovaTarefa('');
+          setNovaQtde('');
 
           setMostrarFormulario(false);
           //setNewTaskTitle(''); // Limpa o campo de entrada após a adição da tarefa
@@ -74,7 +76,12 @@ function ListaDeTarefas() {
                         type="text"
                         value={novaTarefa}
                         onChange={(e) => setNovaTarefa(e.target.value)}
-                        placeholder="Digite uma nova tarefa"
+                        placeholder="Digite um produto"
+                    />
+                    <input 
+                        type='number'
+                        value={novaQtde}
+                        onChange={(e) => setNovaQtde(e.target.value)}
                     />
                     <button onClick={adicionarTarefa}>Adicionar</button>
                 </div>
@@ -85,7 +92,7 @@ function ListaDeTarefas() {
             <ul class='input-tarefa'>
                 {tarefas.map(task => (
                     <li key={task.id} className="tarefa">
-                        <div>{task.descricao}</div>
+                        <div>{task.descricao} - Quantidade: {task.quantidade}</div>
                         <div className="remover-tarefa" onClick={() => removerTarefa(task.id,userId)}>Excluir</div>
                     </li>
                 ))}
